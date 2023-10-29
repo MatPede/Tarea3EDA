@@ -113,7 +113,6 @@ void mapNumbers(const string& expression, map<string, int>& numberMap) {
     while (ss >> token) {
         if (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) {
             numberMap[token] = stoi(token);
-            cout << token << endl;
         }
     }
 }
@@ -121,9 +120,8 @@ void mapNumbers(const string& expression, map<string, int>& numberMap) {
 int operatoria(const string& s, map<string, double>& variables) {
     int resultado = 0;
     stack<int> calculador;
-    map<string, int> numberMap; // Map to store numbers
+    map<string, int> numberMap;
 
-    // Map numbers in the expression
     mapNumbers(s, numberMap);
 
     for (int i = 0; i < s.length(); i++) {
@@ -146,10 +144,9 @@ int operatoria(const string& s, map<string, double>& variables) {
                 calculador.push(numberMap[token]);
             } else {
                 cout << "Variable " << token << " is not defined." << endl;
-                // Handle undefined variable error here or return an error code
+                return 0;
             }
         } else if (isdigit(actual)) {
-            // Convert the digit character to an integer
             calculador.push(valor(actual));
         }
     }
@@ -162,7 +159,7 @@ int main() {
     variables["ans"] = 0;
     string postfixinput;
     int resultado;
-    string lastInput = NULL;
+    string lastInput = "NULL";
     string input;
 
     cout << ">---< calculator >---<" << endl;
@@ -178,15 +175,17 @@ int main() {
 
         // Arbol de operacion
         else if (input == "tree") {
-            if(lastInput == NULL){
+            if(lastInput == "NULL"){
                 cout << "no hay operaciones de las cuales hacer un arbol" << endl;
+            }
+            else{
+
             }
 
         } 
         // definicion de variables
         else if (input.find('=') != string::npos) {
             updateVariable(variables, input);
-            cout << variables["x"] << endl;
 
         } 
         // operaciones
@@ -194,8 +193,8 @@ int main() {
             postfixinput = infixToPostfix(input);
             cout << "Infix: " << input << endl;
             cout << "Postfix: " << postfixinput<< endl;
-            resultado = operatoria(postfixinput, variables);
-            cout << "Result: " << resultado << endl;
+            variables["ans"] = operatoria(postfixinput, variables);
+            cout << "Result: " << variables["ans"] << endl;
             lastInput = input;
         }
     }  
