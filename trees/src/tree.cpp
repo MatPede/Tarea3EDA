@@ -60,8 +60,13 @@ TreeNode* Tree::find(int val){
 
 void Tree::traverse_rec(TreeNode* node, int level){
 	if (node != nullptr){
-		std::cout << std::string(level*2, '-');
-		std::cout<<node->getData() << " at level " << level <<std::endl;
+		if (node->getChildren() != nullptr && !node->getChildren()->isEmpty()) {
+			std::cout << std::string(level*2, '-');
+            std::cout << " " << static_cast<char>(node->getData()) << " at level " << level <<std::endl;
+        } else {
+            std::cout << std::string(level*2, '-');
+			std::cout << " " << node->getData() << " at level " << level <<std::endl;
+        }
 		TreeList* childrenList = node->getChildren();
 		TreeListNode* ptr = childrenList->getHead();
 		while (ptr!=nullptr){
