@@ -8,6 +8,7 @@
 #include <sstream>
 
 using namespace std;
+using namespace trees;
 
 // mapear las variables
 void updateVariable(map<string, double>& variables, const string& input) {
@@ -73,6 +74,7 @@ string infixToPostfix(const string& infix) {
                    orden(operatorStack.top()) >= orden(token)) {
                 postfix += operatorStack.top();
                 operatorStack.pop();
+                postfix += ' ';
             }
             operatorStack.push(token);
         }
@@ -86,6 +88,7 @@ string infixToPostfix(const string& infix) {
 
     return postfix;
 }
+
 
 int valor(char i) {
     return i - '0';
@@ -153,18 +156,84 @@ int operatoria(const string& s, map<string, double>& variables) {
     return calculador.top();
 }
 
+TreeNode* buildExpressionTreeFromPostfix(const string& postfixExpression, map<string, double>& variables) {
+    stack<TreeNode*> nodeStack;
+
+    for (size_t i = 0; i < postfixExpression.size(); i++) {
+        if (isspace(postfixExpression[i])) {
+            // Skip spaces
+            continue;
+        }
+
+        if (isalnum(postfixExpression[i])) {
+            // Variable or number
+            string token;
+            while (i < postfixExpression.size() && (isalnum(postfixExpression[i]) || postfixExpression[i] == '^')) {
+                token += postfixExpression[i];
+                i++;
+            }
+
+            if (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) {
+                // Operand (numerico)
+                int value = stoi(token);
+                TreeNode* operandNode = new TreeNode(value);
+                nodeStack.push(operandNode);
+            } else if (variables.find(token) != variables.end()) {
+                // Operand (variable)
+                int value = variables[token];
+                TreeNode* operandNode = new TreeNode(value);
+                nodeStack.push(operandNode);
+            } else {
+                cerr << "Variable " << token << " is not defined." << endl;
+                return nullptr;
+            }
+            i--;
+        } else if (postfixExpression[i] == '+' || postfixExpression[i] == '-' ||
+                   postfixExpression[i] == '*' || postfixExpression[i] == '/' || postfixExpression[i] == '^') {
+
+            if (nodeStack.size() < 2) {
+                cerr << "Invalid postfix expression." << endl;
+                return nullptr;
+            }
+            TreeNode* rightOperand = nodeStack.top();
+            nodeStack.pop();
+            TreeNode* leftOperand = nodeStack.top();
+            nodeStack.pop();
+
+            TreeNode* operatorNode = new TreeNode(postfixExpression[i]);
+            operatorNode->setChildren(new TreeList());
+            operatorNode->getChildren()->insertFirst(leftOperand);
+            operatorNode->getChildren()->insertFirst(rightOperand);
+
+            nodeStack.push(operatorNode);
+        } else {
+            cerr << "Invalid character in postfix expression: " << postfixExpression[i] << endl;
+            return nullptr;
+        }
+    }
+
+    if (nodeStack.size() != 1) {
+        cerr << "Invalid postfix expression." << endl;
+        return nullptr;
+    }
+
+    return nodeStack.top();
+}
 
 int main() {
     map<string, double> variables;
     variables["ans"] = 0;
     string postfixinput;
     int resultado;
-    string lastInput = "NULL";
+    string lastInput = "FIN";
     string input;
+    Tree expressionTree;
+    string postfixExp;
 
     cout << ">---< calculator >---<" << endl;
     
     while (true) {
+        //break;
         cout << "$ ";
         getline(cin, input);
 
@@ -175,11 +244,14 @@ int main() {
 
         // Arbol de operacion
         else if (input == "tree") {
-            if(lastInput == "NULL"){
+            if(lastInput == "FIN"){
                 cout << "no hay operaciones de las cuales hacer un arbol" << endl;
             }
             else{
-
+                postfixExp = infixToPostfix(lastInput);
+                TreeNode* root = buildExpressionTreeFromPostfix(postfixExp, variables);
+                expressionTree.setRoot(root);
+                expressionTree.traverse();
             }
 
         } 
@@ -209,6 +281,36 @@ int main() {
     cout << "Postfix: " << postfixExpression << endl;
     int result = operatoria(postfixExpression, variables);
     cout << "Result: " << result << endl;
+
+
+/*     trees::Tree tree;
+	tree.setRoot(new trees::TreeNode(10));
+	tree.insert(5,10);
+	tree.insert(6,5);
+	tree.insert(7,10);
+	tree.insert(17,7);
+	tree.insert(71,7);
+	tree.insert(41,7);
+	tree.traverse();
+	std::cout<<"Mostrar los hijos de 10" << std::endl;
+	trees::TreeNode* node = tree.find(10);
+	if (node != nullptr){
+		node->getChildren()->print();
+	} */
+
+
+/*     string postfixExpression2 = "x ^ 32 * 2 - +";
+    Tree expressionTree;
+    TreeNode* root = buildExpressionTreeFromPostfix(postfixExpression, variables);
+    expressionTree.setRoot(root);
+    expressionTree.traverse();
+    if (root) {
+        cout << "Expression Tree built successfully." << endl;
+        // You can use the tree for further processing or evaluation here.
+        if (root != nullptr){
+		root->getChildren()->print();
+	}
+    } */
 
     return 0;
 }
