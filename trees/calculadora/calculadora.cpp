@@ -263,54 +263,14 @@ int main() {
         // operaciones
         else {
             postfixinput = infixToPostfix(input);
-            cout << "Infix: " << input << endl;
-            cout << "Postfix: " << postfixinput<< endl;
+            /* cout << "Infix: " << input << endl;
+            cout << "Postfix: " << postfixinput<< endl; */
             variables["ans"] = operatoria(postfixinput, variables);
-            cout << "Result: " << variables["ans"] << endl;
+            cout << "Resultado: " << variables["ans"] << endl;
             lastInput = input;
         }
     }  
 
-    // testing
-    variables["x"] = 5;
-    string infixExpression = "5 ^ 2 + 3 * ( 3 * 2 - 2 )";
-    //string infixExpression = "(x + 23 * x) + 4";
-    string postfixExpression = infixToPostfix(infixExpression);
-    
-    cout << "Infix: " << infixExpression << endl;
-    cout << "Postfix: " << postfixExpression << endl;
-    int result = operatoria(postfixExpression, variables);
-    cout << "Result: " << result << endl;
-
-
-/*     trees::Tree tree;
-	tree.setRoot(new trees::TreeNode(10));
-	tree.insert(5,10);
-	tree.insert(6,5);
-	tree.insert(7,10);
-	tree.insert(17,7);
-	tree.insert(71,7);
-	tree.insert(41,7);
-	tree.traverse();
-	std::cout<<"Mostrar los hijos de 10" << std::endl;
-	trees::TreeNode* node = tree.find(10);
-	if (node != nullptr){
-		node->getChildren()->print();
-	} */
-
-
-/*     string postfixExpression2 = "x ^ 32 * 2 - +";
-    Tree expressionTree;
-    TreeNode* root = buildExpressionTreeFromPostfix(postfixExpression, variables);
-    expressionTree.setRoot(root);
-    expressionTree.traverse();
-    if (root) {
-        cout << "Expression Tree built successfully." << endl;
-        // You can use the tree for further processing or evaluation here.
-        if (root != nullptr){
-		root->getChildren()->print();
-	}
-    } */
 
     return 0;
 }
