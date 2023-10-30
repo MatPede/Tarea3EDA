@@ -121,7 +121,6 @@ void mapNumbers(const string& expression, map<string, int>& numberMap) {
 }
 
 int operatoria(const string& s, map<string, double>& variables) {
-    int resultado = 0;
     stack<int> calculador;
     map<string, int> numberMap;
 
@@ -248,6 +247,7 @@ int main() {
                 cout << "no hay operaciones de las cuales hacer un arbol" << endl;
             }
             else{
+                expressionTree.clearRoot();
                 postfixExp = infixToPostfix(lastInput);
                 TreeNode* root = buildExpressionTreeFromPostfix(postfixExp, variables);
                 expressionTree.setRoot(root);
@@ -263,8 +263,6 @@ int main() {
         // operaciones
         else {
             postfixinput = infixToPostfix(input);
-            /* cout << "Infix: " << input << endl;
-            cout << "Postfix: " << postfixinput<< endl; */
             variables["ans"] = operatoria(postfixinput, variables);
             cout << "Resultado: " << variables["ans"] << endl;
             lastInput = input;

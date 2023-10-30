@@ -26,6 +26,7 @@ public:
 	void traverse_rec(TreeNode* node, int level);
 	void traverse();
 	virtual ~Tree();
+	void clearRoot();
 };
 
 } /* namespace trees */

@@ -84,4 +84,10 @@ Tree::~Tree() {
 	delete root;
 }
 
+void Tree::clearRoot() {
+    delete root;
+    root = nullptr;
+}
+
+
 } /* namespace trees */
